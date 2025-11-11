@@ -29,6 +29,21 @@ public class TaskService {
     public Optional<Task> findById(Long id) { return taskRepository.findById(id); }
     public List<Task> findByOwnerId(Long ownerId) { return taskRepository.findByOwnerId(ownerId); }
 
+    //  Get All Tasks for current user
+    public List<Task> getAllTasksForUser(String username) {
+        User owner = userService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return taskRepository.findByOwnerId(owner.getId());
+    }
+
+    // Get Task by ID for current user
+    public Task getTaskByIdForUser(Long id, String username) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+        if (task.getOwner() == null || !task.getOwner().getUsername().equals(username)) {
+            throw new AccessDeniedException("Not allowed to view this task");
+        }
+        return task;
+    }
+
     // Create Task using TaskRequest and username of owner
     public Task createTask(TaskRequest req, String username) {
         User owner = userService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User not found"));

@@ -11,6 +11,8 @@ import ut.edu.task_management.service.TaskService;
 import ut.edu.task_management.util.MapperUtil;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -21,6 +23,29 @@ public class TaskController {
 
     @Autowired
     private MapperUtil mapper;
+
+    // Endpoint Get All Tasks (GET /api/tasks)
+    @GetMapping
+    public ResponseEntity<List<TaskResponse>> getAllTasks(Principal principal) {
+        String username = principal != null ? principal.getName() : null;
+        List<Task> tasks = taskService.getAllTasksForUser(username);
+        
+        List<TaskResponse> responses = tasks.stream()
+            .map(task -> mapper.map(task, TaskResponse.class))
+            .collect(Collectors.toList());
+            
+        return ResponseEntity.ok(responses);
+    }
+    
+    // Endpoint Get Task by ID (GET /api/tasks/{id})
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id, Principal principal) {
+        String username = principal != null ? principal.getName() : null;
+        Task task = taskService.getTaskByIdForUser(id, username);
+        
+        TaskResponse response = mapper.map(task, TaskResponse.class);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest req, Principal principal) {
