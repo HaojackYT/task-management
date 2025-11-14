@@ -1,5 +1,6 @@
 package ut.edu.task_management.security;
 
+import org.springframework.stereotype.Component; 
 import ut.edu.task_management.constants.AppConstants;
 
 import javax.crypto.Mac;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
  * Lightweight JWT helper using HMAC-SHA256 without external dependencies.
  * NOTE: For production use, prefer a vetted library and store secrets securely.
  */
+@Component // <-- NEW
 public class JwtTokenProvider {
 
     private static final String HMAC_ALGO = "HmacSHA256";

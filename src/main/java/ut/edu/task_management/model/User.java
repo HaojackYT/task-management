@@ -20,6 +20,9 @@ public class User {
     @Column
     private String fullName;
 
+    @Column
+    private String role = "USER"; 
+
     // Example - a user can have multiple tasks
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Task> tasks = new HashSet<>();
@@ -33,6 +36,8 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getRole() { return role; } 
+    public void setRole(String role) { this.role = role; } 
     public Set<Task> getTasks() { return tasks; }
     public void setTasks(Set<Task> tasks) { this.tasks = tasks; }
 }
