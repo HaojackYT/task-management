@@ -1,7 +1,9 @@
 package ut.edu.task_management.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ut.edu.task_management.dto.TaskResponse;
 import ut.edu.task_management.model.Task;
 import ut.edu.task_management.repository.TaskRepository;
 
@@ -73,4 +75,32 @@ public class TaskService {
         }
         taskRepository.deleteById(id);
     }
+
+    public List<TaskResponse> getAllSortedTasks(String sortBy, String direction) {
+
+        // Keep mapperUtil exactly like you had it
+        MapperUtil mapperUtil = new MapperUtil();
+
+        // Only allow these fields for sorting
+        List<String> validSortFields = List.of("createdAt", "title", "id");
+
+        // If invalid sort field → fallback to createdAt
+        if (!validSortFields.contains(sortBy)) {
+            sortBy = "createdAt";
+        }
+
+        // Sort direction
+        Sort sort = direction != null && direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        // Return sorted tasks
+        return taskRepository.findAll(sort)
+                .stream()
+                .map(mapperUtil::toTaskResponse)
+                .toList();
+    }
+
+
+
 }

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Lightweight JWT helper using HMAC-SHA256 without external dependencies.
  * NOTE: For production use, prefer a vetted library and store secrets securely.
  */
-public class JwtTokenProvider {
+public class    JwtTokenProvider {
 
     private static final String HMAC_ALGO = "HmacSHA256";
 

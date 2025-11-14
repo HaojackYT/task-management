@@ -69,4 +69,12 @@ public class TaskController {
         taskService.deleteTask(id, username);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/sorted")
+    public List<TaskResponse> getSortedTasks(
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return taskService.getAllSortedTasks(sortBy, direction);
+    }
+
 }
