@@ -2,20 +2,36 @@ package ut.edu.task_management.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*; 
 import ut.edu.task_management.service.AuthService;
+import ut.edu.task_management.dto.LoginRequest;  
+import ut.edu.task_management.dto.LoginResponse; 
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final AuthService authService;
+
     @Autowired
-    private AuthService authService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
-    // Implement endpoints (login, register) in the future.
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        try {
+            String token = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+            
+            return ResponseEntity.ok(new LoginResponse(token));
+            
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
 
-    public ResponseEntity<?> placeholder() {
-        return ResponseEntity.ok("Auth endpoints go here");
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser() {
+        return ResponseEntity.ok("Logout successful");
     }
 }
